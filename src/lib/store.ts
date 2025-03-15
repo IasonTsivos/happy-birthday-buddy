@@ -1,6 +1,6 @@
 
 import { Birthday } from "./types";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 // Local storage key
 const STORAGE_KEY = "birthday-reminder-app";

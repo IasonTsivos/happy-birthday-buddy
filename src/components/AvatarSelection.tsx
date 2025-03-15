@@ -1,6 +1,7 @@
 
 import { useState } from "react";
-import { AvatarOption, avatarOptions } from "@/lib/types";
+import { avatarOptions } from "@/lib/types";
+import type { AvatarOption } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 
