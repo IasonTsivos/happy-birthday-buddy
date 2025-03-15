@@ -45,7 +45,7 @@ export default function BirthdayCard({
       <div 
         className={cn(
           "rounded-2xl overflow-hidden shadow-sm cursor-pointer transition-all duration-300 hover:shadow-md", 
-          "bg-gradient-to-r from-purple-100 via-pink-50 to-indigo-100",
+          "bg-gradient-to-r from-purple-100 via-pink-50 to-indigo-100 border border-white/50",
           className
         )}
         onClick={onClick}
@@ -89,7 +89,7 @@ export default function BirthdayCard({
   return (
     <div 
       className={cn(
-        "rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:translate-x-1",
+        "rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:translate-x-1 border border-white/50",
         bgColor,
         className
       )}
