@@ -36,15 +36,6 @@ export default function Header({ className }: HeaderProps) {
           </h1>
         </div>
 
-        {isHome && (
-          <Button
-            onClick={() => navigate("/add")}
-            className="rounded-full bg-primary/90 hover:bg-primary text-white shadow-subtle transition-all duration-300 transform hover:scale-105 active:scale-95"
-          >
-            <Plus className="h-4 w-4 mr-1" />
-            <span>Add</span>
-          </Button>
-        )}
       </div>
     </header>
   );
