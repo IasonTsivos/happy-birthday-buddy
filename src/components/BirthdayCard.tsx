@@ -63,10 +63,8 @@ export default function BirthdayCard({
         className={cn(
           "relative overflow-hidden transition-all duration-300 transform",
           isHighlighted
-            ? "rounded-2xl bg-gradient-to-r p-0.5 scale-100 hover:scale-[1.02] active:scale-[0.98]",
-            gradientClass
-            : "rounded-xl bg-gradient-to-r p-0.5 scale-100 hover:scale-[1.03] active:scale-[0.98]",
-            gradientClass
+            ? `rounded-2xl bg-gradient-to-r p-0.5 scale-100 hover:scale-[1.02] active:scale-[0.98] ${gradientClass}`
+            : `rounded-xl bg-gradient-to-r p-0.5 scale-100 hover:scale-[1.03] active:scale-[0.98] ${gradientClass}`
         )}
       >
         <div className={cn(
