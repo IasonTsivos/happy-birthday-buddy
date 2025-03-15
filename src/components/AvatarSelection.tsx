@@ -19,7 +19,7 @@ export default function AvatarSelection({
   return (
     <div className={cn("space-y-2", className)}>
       <p className="text-sm font-medium text-muted-foreground">Choose an avatar</p>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 sm:grid-cols-6 gap-4">
         {avatarOptions.map((avatar) => (
           <AvatarOption
             key={avatar.id}
@@ -40,33 +40,24 @@ interface AvatarOptionProps {
 }
 
 function AvatarOption({ avatar, isSelected, onClick }: AvatarOptionProps) {
-  const [isLoaded, setIsLoaded] = useState(false);
-
   return (
     <button
       type="button"
       onClick={onClick}
       className={cn(
-        "relative overflow-hidden aspect-square rounded-xl transition-all duration-200",
+        "relative overflow-hidden aspect-square rounded-xl transition-all duration-200 text-3xl flex items-center justify-center",
         isSelected 
-          ? "ring-2 ring-primary ring-offset-2 scale-100" 
-          : "ring-1 ring-border hover:ring-primary/50 scale-95 hover:scale-100",
-        isLoaded ? "bg-transparent" : "bg-muted animate-pulse"
+          ? "ring-2 ring-primary ring-offset-2 scale-100 bg-primary/10" 
+          : "ring-1 ring-border hover:ring-primary/50 scale-95 hover:scale-100 bg-background hover:bg-primary/5"
       )}
     >
-      <img
-        src={avatar.src}
-        alt={avatar.label}
-        className={cn(
-          "h-full w-full object-cover transition-opacity duration-300",
-          isLoaded ? "opacity-100" : "opacity-0"
-        )}
-        onLoad={() => setIsLoaded(true)}
-      />
+      <span className="transform transition-transform duration-200 hover:scale-110">
+        {avatar.emoji}
+      </span>
       
       {isSelected && (
         <div className="absolute inset-0 flex items-center justify-center bg-primary/20 backdrop-blur-sm animate-fade-in">
-          <Check className="h-6 w-6 text-white drop-shadow-md" />
+          <Check className="h-6 w-6 text-primary drop-shadow-md" />
         </div>
       )}
     </button>

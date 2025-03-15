@@ -3,7 +3,6 @@ import { Birthday, getAvatarById } from "@/lib/types";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Gift, CalendarIcon, Heart, ChevronRight } from "lucide-react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface BirthdayCardProps {
   birthday: Birthday;
@@ -31,12 +30,12 @@ export default function BirthdayCard({
   const daysUntil = Math.ceil((nextBirthday.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
   const daysText = daysUntil === 0 ? "Today!" : daysUntil === 1 ? "Tomorrow!" : `in ${daysUntil} days`;
   
-  // Determine background color based on avatar (inspired by the image)
+  // Determine background color based on days until
   const bgColors = [
     "bg-pink-100", "bg-purple-100", "bg-blue-100", 
     "bg-yellow-100", "bg-green-100", "bg-orange-100"
   ];
-  const bgColorIndex = parseInt(birthday.id.substring(0, 4), 16) % bgColors.length;
+  const bgColorIndex = parseInt(birthday.id?.substring(0, 4) || "0", 16) % bgColors.length;
   const bgColor = bgColors[bgColorIndex];
   
   const age = calculateAge(birthdayDate);
@@ -54,10 +53,9 @@ export default function BirthdayCard({
         <div className="p-6 relative">
           <div className="flex justify-between items-start">
             <div className="flex space-x-4 items-center">
-              <Avatar className="h-16 w-16 rounded-xl border-2 border-white shadow-sm">
-                <AvatarImage src={avatar.src} alt={name} />
-                <AvatarFallback>{name.substring(0, 2)}</AvatarFallback>
-              </Avatar>
+              <div className="h-16 w-16 rounded-xl border-2 border-white shadow-sm flex items-center justify-center text-4xl bg-white">
+                {avatar.emoji}
+              </div>
               
               <div className="space-y-1">
                 <h3 className="font-semibold text-lg">{name}</h3>
@@ -87,7 +85,7 @@ export default function BirthdayCard({
     );
   }
   
-  // Non-highlighted card inspired by the image
+  // Non-highlighted card
   return (
     <div 
       className={cn(
@@ -99,10 +97,9 @@ export default function BirthdayCard({
     >
       <div className="p-3 flex justify-between items-center">
         <div className="flex items-center space-x-3">
-          <Avatar className="h-12 w-12 rounded-xl border-2 border-white/80 shadow-sm">
-            <AvatarImage src={avatar.src} alt={name} />
-            <AvatarFallback>{name.substring(0, 2)}</AvatarFallback>
-          </Avatar>
+          <div className="h-12 w-12 rounded-xl border-2 border-white/80 shadow-sm flex items-center justify-center text-3xl bg-white">
+            {avatar.emoji}
+          </div>
           
           <div>
             <h3 className="font-medium">{name}</h3>

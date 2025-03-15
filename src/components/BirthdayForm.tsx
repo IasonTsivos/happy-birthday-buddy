@@ -8,6 +8,7 @@ import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { Birthday } from "@/lib/types";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -27,7 +28,7 @@ import {
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import AvatarSelection from "./AvatarSelection";
-import { addBirthday } from "@/lib/store";
+import { addBirthday, updateBirthday } from "@/lib/store";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -41,24 +42,31 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function BirthdayForm() {
+interface BirthdayFormProps {
+  initialData?: Birthday;
+  mode?: "add" | "edit";
+}
+
+export default function BirthdayForm({ initialData, mode = "add" }: BirthdayFormProps) {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isEditing = mode === "edit";
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      avatarId: "cat",
-      message: "",
-      giftIdeas: "",
+      name: initialData?.name || "",
+      date: initialData?.date ? new Date(initialData.date) : undefined,
+      avatarId: initialData?.avatarId || "cat",
+      message: initialData?.message || "",
+      giftIdeas: initialData?.giftIdeas || "",
     },
   });
 
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     try {
-      const birthday = {
+      const birthdayData = {
         name: data.name,
         date: data.date.toISOString(),
         avatarId: data.avatarId,
@@ -66,12 +74,18 @@ export default function BirthdayForm() {
         giftIdeas: data.giftIdeas,
       };
       
-      addBirthday(birthday);
-      toast("Birthday added successfully");
+      if (isEditing && initialData) {
+        updateBirthday({ ...birthdayData, id: initialData.id });
+        toast("Birthday updated successfully");
+      } else {
+        addBirthday(birthdayData);
+        toast("Birthday added successfully");
+      }
+      
       navigate("/");
     } catch (error) {
-      console.error("Error adding birthday:", error);
-      toast("Failed to add birthday");
+      console.error(`Error ${isEditing ? 'updating' : 'adding'} birthday:`, error);
+      toast(`Failed to ${isEditing ? 'update' : 'add'} birthday`);
     } finally {
       setIsSubmitting(false);
     }
@@ -151,6 +165,9 @@ export default function BirthdayForm() {
                         date > new Date() || date < new Date("1900-01-01")
                       }
                       initialFocus
+                      captionLayout="dropdown-buttons"
+                      fromYear={1920}
+                      toYear={new Date().getFullYear()}
                       className="p-3 pointer-events-auto"
                     />
                   </PopoverContent>
@@ -207,7 +224,7 @@ export default function BirthdayForm() {
             className="w-full md:w-auto shadow-subtle transform hover:translate-y-[-2px] transition-all duration-300"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Saving..." : "Save Birthday"}
+            {isSubmitting ? (isEditing ? "Updating..." : "Saving...") : (isEditing ? "Update Birthday" : "Save Birthday")}
           </Button>
         </div>
       </form>
