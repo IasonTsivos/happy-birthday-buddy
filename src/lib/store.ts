@@ -17,6 +17,12 @@ export function getBirthdays(): Birthday[] {
   }
 }
 
+// Get a specific birthday by ID
+export function getBirthdayById(id: string): Birthday | undefined {
+  const birthdays = getBirthdays();
+  return birthdays.find((birthday) => birthday.id === id);
+}
+
 // Save all birthdays to localStorage
 export function saveBirthdays(birthdays: Birthday[]): void {
   try {
