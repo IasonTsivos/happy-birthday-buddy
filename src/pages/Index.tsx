@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Calendar } from "lucide-react";
+import { Calendar, Gift } from "lucide-react";
 import { getUpcomingBirthdays } from "@/lib/store";
 import { Birthday } from "@/lib/types";
 import Header from "@/components/Header";
@@ -42,7 +42,7 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-background page-transition">
+    <div className="min-h-screen bg-transparent page-transition">
       <Header />
       
       <main className="container-padding">
@@ -53,10 +53,11 @@ export default function Index() {
         ) : birthdays.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="space-y-8">
+          <div className="space-y-10 max-w-5xl mx-auto">
             {birthdays[0] && (
               <section>
-                <h2 className="text-sm uppercase tracking-wide text-muted-foreground mb-3">
+                <h2 className="text-sm uppercase tracking-wide text-primary mb-3 flex items-center">
+                  <Gift className="w-4 h-4 mr-2 opacity-70" />
                   Coming Up
                 </h2>
                 <BirthdayCard 
@@ -69,10 +70,11 @@ export default function Index() {
             
             {birthdays.length > 1 && (
               <section>
-                <h2 className="text-sm uppercase tracking-wide text-muted-foreground mb-3">
+                <h2 className="text-sm uppercase tracking-wide text-primary mb-3 flex items-center">
+                  <Calendar className="w-4 h-4 mr-2 opacity-70" />
                   More Birthdays
                 </h2>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                   {birthdays.slice(1).map((birthday) => (
                     <BirthdayCard
                       key={birthday.id}
@@ -96,11 +98,11 @@ function EmptyState() {
   return (
     <div className={cn(
       "flex flex-col items-center justify-center text-center",
-      "py-16 px-4 rounded-2xl border border-dashed border-border",
-      "bg-secondary/50 animate-fade-in"
+      "py-16 px-4 rounded-2xl border border-dashed border-primary/20",
+      "bg-white/50 backdrop-blur-sm animate-fade-in"
     )}>
-      <div className="h-16 w-16 rounded-full bg-secondary flex items-center justify-center mb-4">
-        <Calendar className="h-8 w-8 text-muted-foreground" />
+      <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+        <Calendar className="h-8 w-8 text-primary" />
       </div>
       <h2 className="text-xl font-medium mb-2">No birthdays yet</h2>
       <p className="text-muted-foreground mb-6 max-w-md">
