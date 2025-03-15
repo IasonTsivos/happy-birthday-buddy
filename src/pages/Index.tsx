@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Calendar, Gift } from "lucide-react";
+import { Calendar, Gift, Plus } from "lucide-react";
 import { getUpcomingBirthdays } from "@/lib/store";
 import { Birthday } from "@/lib/types";
 import Header from "@/components/Header";
@@ -45,7 +45,7 @@ export default function Index() {
     <div className="min-h-screen bg-transparent page-transition">
       <Header />
       
-      <main className="container-padding">
+      <main className="container max-w-4xl mx-auto px-4 sm:px-6 py-8">
         {isLoading ? (
           <div className="h-40 flex items-center justify-center">
             <div className="animate-pulse text-muted-foreground">Loading...</div>
@@ -53,29 +53,32 @@ export default function Index() {
         ) : birthdays.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="space-y-10 max-w-5xl mx-auto">
-            {birthdays[0] && (
-              <section>
-                <h2 className="text-sm uppercase tracking-wide text-primary mb-3 flex items-center">
-                  <Gift className="w-4 h-4 mr-2 opacity-70" />
-                  Coming Up
-                </h2>
-                <BirthdayCard 
-                  birthday={birthdays[0]} 
-                  isHighlighted={true}
-                  onClick={() => handleBirthdayClick(birthdays[0].id)}
-                />
-              </section>
-            )}
+          <div className="space-y-8">
+            <section>
+              <h2 className="text-base font-medium text-primary/90 mb-3 flex items-center">
+                <Gift className="w-4 h-4 mr-2 opacity-70" />
+                Upcoming birthdays
+              </h2>
+              <div className="space-y-3">
+                {birthdays.slice(0, Math.min(3, birthdays.length)).map((birthday, index) => (
+                  <BirthdayCard
+                    key={birthday.id}
+                    birthday={birthday}
+                    isHighlighted={index === 0}
+                    onClick={() => handleBirthdayClick(birthday.id)}
+                  />
+                ))}
+              </div>
+            </section>
             
-            {birthdays.length > 1 && (
+            {birthdays.length > 3 && (
               <section>
-                <h2 className="text-sm uppercase tracking-wide text-primary mb-3 flex items-center">
+                <h2 className="text-base font-medium text-primary/90 mb-3 flex items-center">
                   <Calendar className="w-4 h-4 mr-2 opacity-70" />
                   More Birthdays
                 </h2>
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                  {birthdays.slice(1).map((birthday) => (
+                <div className="space-y-3">
+                  {birthdays.slice(3).map((birthday) => (
                     <BirthdayCard
                       key={birthday.id}
                       birthday={birthday}
@@ -85,6 +88,15 @@ export default function Index() {
                 </div>
               </section>
             )}
+            
+            <div className="fixed bottom-6 right-6">
+              <button
+                onClick={() => navigate("/add")}
+                className="h-14 w-14 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center shadow-lg text-white hover:scale-105 transition-transform duration-200"
+              >
+                <Plus className="h-6 w-6" />
+              </button>
+            </div>
           </div>
         )}
       </main>

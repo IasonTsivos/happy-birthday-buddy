@@ -1,25 +1,24 @@
+
 import { Birthday, getAvatarById } from "@/lib/types";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Gift, CalendarIcon, Heart } from "lucide-react";
+import { Gift, CalendarIcon, Heart, ChevronRight } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+
 interface BirthdayCardProps {
   birthday: Birthday;
   isHighlighted?: boolean;
   className?: string;
   onClick?: () => void;
 }
+
 export default function BirthdayCard({
   birthday,
   isHighlighted = false,
   className,
   onClick
 }: BirthdayCardProps) {
-  const {
-    name,
-    date,
-    avatarId,
-    message
-  } = birthday;
+  const { name, date, avatarId, message } = birthday;
   const avatar = getAvatarById(avatarId);
   const birthdayDate = parseISO(date);
 
@@ -30,56 +29,102 @@ export default function BirthdayCard({
     nextBirthday.setFullYear(today.getFullYear() + 1);
   }
   const daysUntil = Math.ceil((nextBirthday.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-  const daysText = daysUntil === 0 ? "Today!" : daysUntil === 1 ? "Tomorrow!" : `In ${daysUntil} days`;
+  const daysText = daysUntil === 0 ? "Today!" : daysUntil === 1 ? "Tomorrow!" : `in ${daysUntil} days`;
+  
+  // Determine background color based on avatar (inspired by the image)
+  const bgColors = [
+    "bg-pink-100", "bg-purple-100", "bg-blue-100", 
+    "bg-yellow-100", "bg-green-100", "bg-orange-100"
+  ];
+  const bgColorIndex = parseInt(birthday.id.substring(0, 4), 16) % bgColors.length;
+  const bgColor = bgColors[bgColorIndex];
+  
+  const age = calculateAge(birthdayDate);
 
-  // Determine gradient based on days until
-  const gradientClass = daysUntil <= 7 ? "from-pink-300 via-purple-300 to-indigo-300" : daysUntil <= 30 ? "from-indigo-300 via-purple-300 to-pink-300" : "from-purple-200 via-indigo-200 to-blue-200";
-  return <div className={cn("group transition-all duration-300 cursor-pointer", isHighlighted ? "animate-float" : "", className)} onClick={onClick}>
-      <div className={cn("relative overflow-hidden transition-all duration-300 transform", isHighlighted ? `rounded-2xl bg-gradient-to-r p-0.5 scale-100 hover:scale-[1.02] active:scale-[0.98] ${gradientClass}` : `rounded-xl bg-gradient-to-r p-0.5 scale-100 hover:scale-[1.03] active:scale-[0.98] ${gradientClass}`)}>
-        <div className={cn("h-full w-full rounded-[inherit] p-5", isHighlighted ? "bg-white/90 backdrop-blur-lg" : "bg-white/95")}>
-          {/* Background decoration */}
-          {isHighlighted && <div className="absolute inset-0 z-0 overflow-hidden opacity-20">
-              <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/20 blur-xl" />
-              <div className="absolute -bottom-10 -left-10 h-28 w-28 rounded-full bg-primary/10 blur-xl" />
-            </div>}
-          
-          <div className="relative z-10 flex flex-col">
-            <div className="flex items-start justify-between mb-4">
-              <div className="avatar-container flex-shrink-0 h-16 w-16 shadow-subtle">
-                <img src={avatar.src} alt={avatar.label} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" />
-              </div>
+  if (isHighlighted) {
+    return (
+      <div 
+        className={cn(
+          "rounded-2xl overflow-hidden shadow-sm cursor-pointer transition-all duration-300 hover:shadow-md", 
+          "bg-gradient-to-r from-purple-100 via-pink-50 to-indigo-100",
+          className
+        )}
+        onClick={onClick}
+      >
+        <div className="p-6 relative">
+          <div className="flex justify-between items-start">
+            <div className="flex space-x-4 items-center">
+              <Avatar className="h-16 w-16 rounded-xl border-2 border-white shadow-sm">
+                <AvatarImage src={avatar.src} alt={name} />
+                <AvatarFallback>{name.substring(0, 2)}</AvatarFallback>
+              </Avatar>
               
-              <div className={cn("px-3 py-1 rounded-full text-xs font-medium", daysUntil <= 7 ? "bg-pink-100 text-pink-700" : daysUntil <= 30 ? "bg-indigo-100 text-indigo-700" : "bg-purple-50 text-purple-700")}>
+              <div className="space-y-1">
+                <h3 className="font-semibold text-lg">{name}</h3>
+                <div className="flex items-center text-sm text-muted-foreground">
+                  <CalendarIcon className="h-3.5 w-3.5 mr-1.5" />
+                  <span className="font-medium">{format(birthdayDate, "dd MMMM")}</span>
+                </div>
+                {message && (
+                  <p className="text-sm text-muted-foreground line-clamp-2 max-w-xs">
+                    {message}
+                  </p>
+                )}
+              </div>
+            </div>
+            
+            <div className="flex flex-col items-end">
+              <div className="bg-white px-3 py-1.5 rounded-full text-lg font-bold text-primary shadow-sm">
+                {age} yrs
+              </div>
+              <div className="text-xs mt-2 text-muted-foreground">
                 {daysText}
               </div>
             </div>
-            
-            <div>
-              <h3 className="font-medium text-lg">{name}</h3>
-              <div className="flex items-center gap-1 text-muted-foreground text-sm mt-1">
-                <CalendarIcon className="h-3.5 w-3.5" />
-                <span>
-                  {format(birthdayDate, "MMMM d")}
-                </span>
-                {!isHighlighted && <span className="inline-flex ml-2 items-center">
-                    <Heart className="h-3 w-3 mr-1 text-pink-500 fill-pink-500" />
-                    {calculateAge(birthdayDate)} years
-                  </span>}
-              </div>
-              
-              {message}
-            </div>
-            
-            {isHighlighted && <div className="absolute bottom-5 right-5 text-xs font-medium rounded-full px-3 py-1 bg-primary/10 text-primary flex items-center">
-                <Heart className="h-3 w-3 mr-1.5 fill-pink-500 text-pink-500" />
-                {format(birthdayDate, "yyyy") !== format(new Date(), "yyyy") && `${format(birthdayDate, "yyyy")} · `}
-                {calculateAge(birthdayDate)} years
-              </div>}
           </div>
         </div>
       </div>
-    </div>;
+    );
+  }
+  
+  // Non-highlighted card inspired by the image
+  return (
+    <div 
+      className={cn(
+        "rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:translate-x-1",
+        bgColor,
+        className
+      )}
+      onClick={onClick}
+    >
+      <div className="p-3 flex justify-between items-center">
+        <div className="flex items-center space-x-3">
+          <Avatar className="h-12 w-12 rounded-xl border-2 border-white/80 shadow-sm">
+            <AvatarImage src={avatar.src} alt={name} />
+            <AvatarFallback>{name.substring(0, 2)}</AvatarFallback>
+          </Avatar>
+          
+          <div>
+            <h3 className="font-medium">{name}</h3>
+            <div className="flex items-center text-sm text-muted-foreground">
+              <span className="font-medium">{format(birthdayDate, "dd")}</span>
+              <span className="ml-1">{format(birthdayDate, "MMMM")}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex items-center space-x-2">
+          <div className="text-right">
+            <div className="font-bold text-lg">{age} yrs</div>
+            <div className="text-xs text-muted-foreground">{daysText}</div>
+          </div>
+          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        </div>
+      </div>
+    </div>
+  );
 }
+
 function calculateAge(birthdate: Date): number {
   const today = new Date();
   let age = today.getFullYear() - birthdate.getFullYear();
