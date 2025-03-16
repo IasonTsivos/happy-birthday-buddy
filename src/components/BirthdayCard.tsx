@@ -32,8 +32,8 @@ export default function BirthdayCard({
   
   // Determine background color based on days until
   const bgColors = [
-    "bg-pink-200", "bg-purple-200", "bg-blue-200", 
-    "bg-yellow-200", "bg-green-200", "bg-orange-200"
+    "bg-pink-100", "bg-purple-100", "bg-blue-100", 
+    "bg-yellow-100", "bg-green-100", "bg-orange-100"
   ];
   const bgColorIndex = parseInt(birthday.id?.substring(0, 4) || "0", 16) % bgColors.length;
   const bgColor = bgColors[bgColorIndex];
@@ -45,7 +45,7 @@ export default function BirthdayCard({
       <div 
         className={cn(
           "rounded-2xl overflow-hidden shadow-sm cursor-pointer transition-all duration-300 hover:shadow-md", 
-          "bg-gradient-to-r from-blue-200 via-orange-100 to-red-200 border border-white",
+          "bg-gradient-to-r from-purple-100 via-pink-50 to-indigo-100 border border-white/50",
           className
         )}
         onClick={onClick}
@@ -60,9 +60,14 @@ export default function BirthdayCard({
               <div className="space-y-1">
                 <h3 className="font-semibold text-lg">{name}</h3>
                 <div className="flex items-center text-sm text-muted-foreground">
-                  <Gift className="h-5 w-5 mr-1.5" />
+                  <CalendarIcon className="h-3.5 w-3.5 mr-1.5" />
                   <span className="font-medium">{format(birthdayDate, "dd MMMM")}</span>
                 </div>
+                {message && (
+                  <p className="text-sm text-muted-foreground line-clamp-2 max-w-xs">
+                    {message}
+                  </p>
+                )}
               </div>
             </div>
             
@@ -84,7 +89,7 @@ export default function BirthdayCard({
   return (
     <div 
       className={cn(
-        "rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:translate-x-1 border border-white",
+        "rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:translate-x-1 border border-white/50",
         bgColor,
         className
       )}
@@ -122,7 +127,7 @@ function calculateAge(birthdate: Date): number {
   let age = today.getFullYear() - birthdate.getFullYear();
   const monthDifference = today.getMonth() - birthdate.getMonth();
   if (monthDifference < 0 || monthDifference === 0 && today.getDate() < birthdate.getDate()) {
-    age;
+    age--;
   }
   return age;
 }
