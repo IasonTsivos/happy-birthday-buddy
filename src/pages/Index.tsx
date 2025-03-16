@@ -6,7 +6,9 @@ import { getUpcomingBirthdays } from "@/lib/store";
 import { Birthday } from "@/lib/types";
 import Header from "@/components/Header";
 import BirthdayCard from "@/components/BirthdayCard";
+import Balloons from "@/components/Balloons";
 import { cn } from "@/lib/utils";
+import { requestNotificationPermission, rescheduleAllNotifications } from "@/lib/notifications";
 
 export default function Index() {
   const [birthdays, setBirthdays] = useState<Birthday[]>([]);
@@ -14,11 +16,17 @@ export default function Index() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Request notification permission when the app loads
+    requestNotificationPermission();
+    
     // Load birthdays on component mount
     const loadBirthdays = () => {
       try {
         const upcoming = getUpcomingBirthdays();
         setBirthdays(upcoming);
+        
+        // Reschedule notifications for all birthdays
+        rescheduleAllNotifications();
       } catch (error) {
         console.error("Failed to load birthdays:", error);
       } finally {
@@ -44,6 +52,7 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-transparent page-transition">
       <Header />
+      <Balloons />
       
       <main className="container max-w-4xl mx-auto px-4 sm:px-6 py-8">
         {isLoading ? (
