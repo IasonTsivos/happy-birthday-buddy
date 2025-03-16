@@ -60,7 +60,8 @@ export default function Balloons() {
         />
       ))}
       
-      <style jsx="true">{`
+      <style>
+        {`
         @keyframes float {
           0% {
             transform: translateY(0) rotate(0deg);
@@ -72,7 +73,8 @@ export default function Balloons() {
             transform: translateY(-300vh) rotate(${Math.random() * 40 - 20}deg);
           }
         }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 }
