@@ -6,6 +6,7 @@ import { getUpcomingBirthdays } from "@/lib/store";
 import { Birthday } from "@/lib/types";
 import Header from "@/components/Header";
 import BirthdayCard from "@/components/BirthdayCard";
+import Balloons from "@/components/Balloons";
 import { cn } from "@/lib/utils";
 
 export default function Index() {
@@ -43,6 +44,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-transparent page-transition">
+      <Balloons />
       <Header />
       
       <main className="container max-w-4xl mx-auto px-4 sm:px-6 py-8">
