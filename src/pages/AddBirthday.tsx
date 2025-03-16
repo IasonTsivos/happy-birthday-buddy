@@ -1,11 +1,12 @@
 
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import BirthdayForm from "@/components/BirthdayForm";
 import Balloons from "@/components/Balloons";
 
 export default function AddBirthday() {
   return (
-    <div className="min-h-screen bg-background page-transition">
+    <div className="min-h-screen bg-background page-transition pb-24">
       <Header />
       <Balloons />
       
@@ -14,6 +15,8 @@ export default function AddBirthday() {
           <BirthdayForm />
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }
