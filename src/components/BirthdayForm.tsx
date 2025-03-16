@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
-import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Birthday } from "@/lib/types";
 
@@ -27,7 +26,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import AvatarSelection from "./AvatarSelection";
+import GiftIdeasList from "./GiftIdeasList";
 import { addBirthday, updateBirthday } from "@/lib/store";
+import { scheduleBirthdayNotifications } from "@/lib/notifications";
 
 // Define the schema with separate day, month, and year fields
 const formSchema = z.object({
@@ -81,6 +82,7 @@ export default function BirthdayForm({ initialData, mode = "add" }: BirthdayForm
     { value: "11", label: "November" },
     { value: "12", label: "December" },
   ], []);
+  
   const currentYear = new Date().getFullYear();
   const years = useMemo(() => 
     Array.from({ length: 100 }, (_, i) => (currentYear - i).toString()), 
@@ -123,13 +125,18 @@ export default function BirthdayForm({ initialData, mode = "add" }: BirthdayForm
         giftIdeas: data.giftIdeas,
       };
       
+      let birthday;
       if (isEditing && initialData) {
-        updateBirthday({ ...birthdayData, id: initialData.id });
+        birthday = { ...birthdayData, id: initialData.id };
+        updateBirthday(birthday);
         toast("Birthday updated successfully");
       } else {
-        addBirthday(birthdayData);
+        birthday = addBirthday(birthdayData);
         toast("Birthday added successfully");
       }
+      
+      // Schedule notifications for this birthday
+      scheduleBirthdayNotifications(birthday);
       
       navigate("/");
     } catch (error) {
@@ -138,6 +145,22 @@ export default function BirthdayForm({ initialData, mode = "add" }: BirthdayForm
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const testNotification = () => {
+    toast("Sending test notification...");
+    const testDate = new Date();
+    testDate.setSeconds(testDate.getSeconds() + 5); // 5 seconds from now
+    
+    const testBirthday = {
+      id: "test-notification",
+      name: "Test Person",
+      date: testDate.toISOString(),
+      avatarId: "cake",
+      message: "This is a test notification",
+    };
+    
+    scheduleBirthdayNotifications(testBirthday, true);
   };
 
   return (
@@ -288,11 +311,9 @@ export default function BirthdayForm({ initialData, mode = "add" }: BirthdayForm
               <FormItem>
                 <FormLabel>Gift Ideas</FormLabel>
                 <FormControl>
-                  <Textarea
-                    placeholder="Add gift ideas (optional)"
-                    className="resize-none"
-                    rows={3}
-                    {...field}
+                  <GiftIdeasList 
+                    initialGiftIdeas={field.value} 
+                    onChange={field.onChange} 
                   />
                 </FormControl>
                 <FormMessage />
@@ -301,7 +322,16 @@ export default function BirthdayForm({ initialData, mode = "add" }: BirthdayForm
           />
         </div>
 
-        <div className="flex justify-end pt-4">
+        <div className="flex justify-between pt-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={testNotification}
+            className="bg-orange-100 hover:bg-orange-200 border-orange-200"
+          >
+            Test Notification
+          </Button>
+          
           <Button
             type="submit"
             className="w-full md:w-auto shadow-subtle transform hover:translate-y-[-2px] transition-all duration-300"
