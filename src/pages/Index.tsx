@@ -1,10 +1,10 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Calendar, Gift, Plus } from "lucide-react";
 import { getUpcomingBirthdays } from "@/lib/store";
 import { Birthday } from "@/lib/types";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import BirthdayCard from "@/components/BirthdayCard";
 import Balloons from "@/components/Balloons";
 import { cn } from "@/lib/utils";
@@ -16,16 +16,13 @@ export default function Index() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Request notification permission when the app loads
     requestNotificationPermission();
     
-    // Load birthdays on component mount
     const loadBirthdays = () => {
       try {
         const upcoming = getUpcomingBirthdays();
         setBirthdays(upcoming);
         
-        // Reschedule notifications for all birthdays
         rescheduleAllNotifications();
       } catch (error) {
         console.error("Failed to load birthdays:", error);
@@ -36,10 +33,8 @@ export default function Index() {
 
     loadBirthdays();
 
-    // Add event listener for storage changes
     window.addEventListener("storage", loadBirthdays);
     
-    // Clean up event listener
     return () => {
       window.removeEventListener("storage", loadBirthdays);
     };
@@ -50,7 +45,7 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent page-transition">
+    <div className="min-h-screen bg-transparent page-transition pb-24">
       <Header />
       <Balloons />
       
@@ -97,18 +92,11 @@ export default function Index() {
                 </div>
               </section>
             )}
-            
-            <div className="fixed bottom-6 right-6">
-              <button
-                onClick={() => navigate("/add")}
-                className="h-14 w-14 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center shadow-lg text-white hover:scale-105 transition-transform duration-200"
-              >
-                <Plus className="h-6 w-6" />
-              </button>
-            </div>
           </div>
         )}
       </main>
+
+      <Footer />
     </div>
   );
 }
