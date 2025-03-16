@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">happy-birthday-buddy</string>
+    <string name="title_activity_main">happy-birthday-buddy</string>
+    <string name="package_name">app.lovable.caecf5be424349b4a8e8142d1db4db83</string>
+    <string name="custom_url_scheme">app.lovable.caecf5be424349b4a8e8142d1db4db83</string>
+</resources>
