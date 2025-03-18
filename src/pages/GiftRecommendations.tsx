@@ -115,10 +115,10 @@ export default function GiftRecommendations() {
       <Header />
       <Balloons />
       
-      <main className="container max-w-4xl mx-auto px-4 sm:px-6 py-8">
-        <div className="space-y-6">
-          <h1 className="text-2xl font-bold text-primary flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-yellow-500" />
+      <main className="container max-w-4xl mx-auto px-3 sm:px-4 py-4">
+        <div className="space-y-4">
+          <h1 className="text-xl font-bold text-primary flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-yellow-500" />
             Gift Recommendations
           </h1>
           
@@ -126,7 +126,7 @@ export default function GiftRecommendations() {
             <div className="flex space-x-2 w-max">
               <Button
                 variant={selectedCategory === null ? "default" : "outline"}
-                className="rounded-full"
+                className="rounded-full text-xs py-1 px-3 h-8"
                 onClick={() => setSelectedCategory(null)}
               >
                 All
@@ -135,7 +135,7 @@ export default function GiftRecommendations() {
                 <Button
                   key={category.id}
                   variant={selectedCategory === category.id ? "default" : "outline"}
-                  className="rounded-full flex items-center gap-2"
+                  className="rounded-full flex items-center gap-1 text-xs py-1 px-3 h-8"
                   onClick={() => setSelectedCategory(category.id)}
                 >
                   <span>{category.icon}</span>
@@ -145,11 +145,11 @@ export default function GiftRecommendations() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             {filteredGifts.map((gift) => (
               <Card key={gift.id} className={cn(
                 "overflow-hidden transition-transform hover:scale-102",
-                "border border-primary/10 bg-white/80 backdrop-blur-sm"
+                "border border-primary/10 bg-white/80 backdrop-blur-sm text-sm"
               )}>
                 {gift.imageUrl && (
                   <div className="aspect-video w-full overflow-hidden bg-muted">
@@ -160,13 +160,13 @@ export default function GiftRecommendations() {
                     />
                   </div>
                 )}
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold">{gift.name}</h3>
-                  <div className="mt-1 text-sm text-gray-600">{gift.description}</div>
+                <div className="p-3">
+                  <h3 className="text-sm font-semibold truncate">{gift.name}</h3>
+                  <div className="mt-1 text-xs text-gray-600 line-clamp-2">{gift.description}</div>
                   <div className="mt-2 flex items-center justify-between">
-                    <span className="font-medium text-primary">{gift.price}</span>
-                    <Button variant="outline" size="sm" className="rounded-full">
-                      Add to Ideas
+                    <span className="font-medium text-primary text-xs">{gift.price}</span>
+                    <Button variant="outline" size="sm" className="rounded-full h-7 px-2 text-xs">
+                      Add
                     </Button>
                   </div>
                 </div>
